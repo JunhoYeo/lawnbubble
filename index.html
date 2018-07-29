@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Lawnbubble</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div>
+        <img id="avatar" src="" height="100" width="100"/>
+        <span id="name">name (id)</span>
+    </div>
+    <h2>Today</h2>
+    <h1 id="contributions">0</h1>
+<script>
+    var request = require('request');
+    var cheerio = require('cheerio');
+    var username = 'junhoyeo'
+    var url = 'https://github.com/users/' + username + '/contributions'; 
+    request(url, function(error, response, html){  
+        if (error) {throw error};
+        var $ = cheerio.load(html);
+        document.getElementById('contributions').innerHTML = $('.day').last().attr('data-count');
+        document.body.style.backgroundColor = $('.day').last().attr('fill');
+    });
+    var url = 'https://api.github.com/users/' + username;
+    request({
+        url: url,
+        json: true,
+        headers: { 
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+        }
+    }, function(error, response, user){  
+        if (error) {throw error};
+        document.getElementById('avatar').src = user.avatar_url
+        document.getElementById('name').innerHTML = user.name + '(' + user.login + ')'
+    });
+</script>
+</body>
+</html>
