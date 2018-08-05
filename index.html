@@ -7,35 +7,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div>
-        <img id="avatar" src="" height="100" width="100"/>
-        <span id="name">name (id)</span>
+    <style>
+    @font-face { 
+        font-family: 'NotoSerifKR'; 
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NotoSerifKR.woff') format('woff'); 
+        font-weight: normal; 
+        font-style: normal; 
+    }
+    html, body { margin: 0; padding: 0 }
+    body { font-family: 'NotoSerifKR'; }
+    </style>
+    <div style="text-align: center;">
+        <div class="profile" style="top: 15px; padding: 5px; color: white;
+        background-color:#333; width: 100%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <img id="avatar" src="" style="border-radius: 50%; 
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" height="50" width="50"/>
+            <span id="name">name (id)</span>
+        </div>
+        <h2>Today</h2>
+        <h1 id="contributions" style="font-size: 500%; margin: 5px;">0</h1>
     </div>
-    <h2>Today</h2>
-    <h1 id="contributions">0</h1>
+    <blockquote>
+        <p id="quote-content"></p>
+        <strong><p id="quote-name"></p></strong>
+    </blockquote>
+    <div class="github-btn" style="padding: 10px; position: fixed; bottom: 0; background-color: #6e5494;
+    width: 100%; text-align: center; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <!-- Place this tag where you want the button to render. -->
+        <a class="github-button" href="https://github.com/junhoyeo" 
+        data-size="large" data-show-count="true" 
+        aria-label="Follow @junhoyeo on GitHub">Follow @junhoyeo</a>
+        <a class="github-button" href="https://github.com/junhoyeo/lawnbubble" 
+        data-icon="octicon-star" data-size="large" data-show-count="true" 
+        aria-label="Star junhoyeo/lawnbubble on GitHub">Star</a>
+        <!-- Place this tag where you want the button to render. -->
+        <a class="github-button" href="https://github.com/junhoyeo/lawnbubble/fork" 
+        data-icon="octicon-repo-forked" data-size="large" 
+        aria-label="Fork junhoyeo/lawnbubble on GitHub">Fork</a>
+    </div>
 <script>
-    var request = require('request');
-    var cheerio = require('cheerio');
-    var username = 'junhoyeo'
-    var url = 'https://github.com/users/' + username + '/contributions'; 
-    request(url, function(error, response, html){  
-        if (error) {throw error};
-        var $ = cheerio.load(html);
-        document.getElementById('contributions').innerHTML = $('.day').last().attr('data-count');
-        document.body.style.backgroundColor = $('.day').last().attr('fill');
-    });
-    var url = 'https://api.github.com/users/' + username;
-    request({
-        url: url,
-        json: true,
-        headers: { 
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
-        }
-    }, function(error, response, user){  
-        if (error) {throw error};
-        document.getElementById('avatar').src = user.avatar_url
-        document.getElementById('name').innerHTML = user.name + '(' + user.login + ')'
-    });
+var request = require('request');
+var cheerio = require('cheerio');
+var username = 'junhoyeo'
+var url = 'https://github.com/users/' + username + '/contributions'; 
+request(url, function(error, response, html){  
+    if (error) {throw error};
+    var $ = cheerio.load(html);
+    document.getElementById('contributions').innerHTML = $('.day').last().attr('data-count');
+    document.body.style.backgroundColor = $('.day').last().attr('fill');
+});
+var url = 'https://api.github.com/users/' + username;
+request({
+    url: url,
+    json: true,
+    headers: { 
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+    }
+}, function(error, response, user){  
+    if (error) {throw error};
+    document.getElementById('avatar').src = user.avatar_url
+    document.getElementById('name').innerHTML = user.name + '(' + user.login + ')'
+});
+var url = 'http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1';
+request({
+    url: url,
+    json: true
+}, function(error, response, quote){  
+    if (error) {throw error};
+    console.log(quote[0])
+    document.getElementById('quote-name').innerHTML = quote[0].title
+    document.getElementById('quote-content').innerHTML = quote[0].content
+});
 </script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>
